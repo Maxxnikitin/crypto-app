@@ -11,7 +11,7 @@ export default function Home() {
       tg.ready(); // Сообщаем Telegram, что приложение готово
       tg.expand(); // Расширяем Web App на весь экран
 
-      setUser(tg.initDataUnsafe?.user); // Выводим информацию о пользователе
+      setUser(tg.initDataUnsafe?.user);
     }
   }, []);
 
