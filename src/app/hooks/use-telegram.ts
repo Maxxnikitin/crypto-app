@@ -15,7 +15,7 @@ export const useTelegram = () => {
 
         // // Получаем данные пользователя
         const userData = WebApp.initDataUnsafe.user;
-        alert(userData);
+        alert(JSON.stringify(userData));
 
         // if (userData) {
         //   WebApp.showAlert(JSON.stringify(userData));
