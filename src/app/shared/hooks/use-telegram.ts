@@ -1,9 +1,9 @@
-"use client";
-
 import WebApp from "@twa-dev/sdk";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { TUser } from "../types/telegram";
 
 export const useTelegram = () => {
+  const [tgUser, setTgUser] = useState<TUser | null>(null);
   useEffect(() => {
     const onLoad = () => {
       if (typeof window !== "undefined") {
@@ -11,15 +11,9 @@ export const useTelegram = () => {
         WebApp.ready(); // Сообщаем, что Web App готов
         WebApp.expand(); // Расширяем приложение на весь экран
 
-        // WebApp.showAlert("Hey there!");
-
-        // // Получаем данные пользователя
-        const userData = WebApp.initDataUnsafe.user;
-        alert(JSON.stringify(userData));
-
-        // if (userData) {
-        //   WebApp.showAlert(JSON.stringify(userData));
-        // }
+        // Получаем данные пользователя
+        const userData = WebApp.initDataUnsafe.user as TUser;
+        if (userData) setTgUser(userData);
       }
     };
 
@@ -31,4 +25,6 @@ export const useTelegram = () => {
       return () => window.removeEventListener("load", onLoad);
     }
   }, []);
+
+  return { tgUser };
 };

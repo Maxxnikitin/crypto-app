@@ -1,15 +1,34 @@
 "use client";
 
-import { useTelegram } from "./hooks/use-telegram";
+import { ThemeProvider, createTheme } from "@mui/material";
+import { WalletConnect } from "./components/wallet-connect";
 import styles from "./page.module.css";
+import { useEffect, useState } from "react";
+import {
+  DEFAULT_THEME_MODE,
+  ThemeMode,
+  getCurrentThemeMode,
+} from "./shared/theme";
 
 export default function Home() {
-  useTelegram();
+  const [themeMode, setThemeMode] = useState<ThemeMode>(DEFAULT_THEME_MODE);
+
+  const theme = createTheme({
+    palette: {
+      mode: themeMode,
+    },
+  });
+
+  useEffect(() => {
+    const currentThemeMode = getCurrentThemeMode();
+    setThemeMode(currentThemeMode);
+  }, []);
 
   return (
-    <div className={styles.page}>
-      <h1>Привет, это интеграция с Telegram</h1>
-      <p>Здесь будет информация, связанная с пользователем.</p>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className={styles.page}>
+        <WalletConnect />
+      </div>
+    </ThemeProvider>
   );
 }
