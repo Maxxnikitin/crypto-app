@@ -85,6 +85,10 @@ export const WalletConnect = () => {
     const unsubscribe = tonConnect.onStatusChange((walletInfo) => {
       console.log(111, "status: ", walletInfo);
     });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (
