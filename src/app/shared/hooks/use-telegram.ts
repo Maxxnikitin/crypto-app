@@ -12,7 +12,7 @@ export const useTelegram = () => {
         WebApp.expand(); // Расширяем приложение на весь экран
 
         // Получаем данные пользователя
-        const userData = WebApp.initDataUnsafe.user as TUser;
+        const userData = WebApp.initDataUnsafe.user as TUser | undefined;
         if (userData) setTgUser(userData);
       }
     };
