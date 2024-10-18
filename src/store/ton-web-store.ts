@@ -9,7 +9,7 @@ type TStore = {
   saveTonWebConnect: (tonWebConnect: TonWeb) => void;
 };
 
-export const useTonWebStore = create<TStore>((set, get) => ({
+export const useTonWebStore = create<TStore>((set) => ({
   balance: null,
   tonWebConnect: null,
 

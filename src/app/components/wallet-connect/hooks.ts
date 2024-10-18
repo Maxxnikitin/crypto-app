@@ -93,7 +93,7 @@ export const useWalletConnect = () => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [saveBalance, saveWallet, saveTonConnect, saveTonWebConnect]);
 
   return {
     wallet,
