@@ -1,7 +1,6 @@
 "use client";
 
 import { ThemeProvider, createTheme } from "@mui/material";
-import { WalletConnect } from "./components/wallet-connect";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import {
@@ -9,6 +8,7 @@ import {
   ThemeMode,
   getCurrentThemeMode,
 } from "./shared/theme";
+import { Header } from "./components/header";
 
 export default function Home() {
   const [themeMode, setThemeMode] = useState<ThemeMode>(DEFAULT_THEME_MODE);
@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <ThemeProvider theme={theme}>
       <div className={styles.page}>
-        <WalletConnect />
+        <Header />
       </div>
     </ThemeProvider>
   );
