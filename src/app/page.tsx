@@ -9,9 +9,12 @@ import {
   getCurrentThemeMode,
 } from "./shared/theme";
 import { Header } from "./components/header";
+import { useTelegram } from "./shared/hooks/use-telegram";
 
 export default function Home() {
   const [themeMode, setThemeMode] = useState<ThemeMode>(DEFAULT_THEME_MODE);
+
+  useTelegram();
 
   const theme = createTheme({
     palette: {
