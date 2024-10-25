@@ -1,8 +1,6 @@
-import { getCoinQuote, getCoinsList } from "@/utils/api";
-import { TCoinsList, TFullPoolData } from "@/utils/types";
+import { TFullPoolData } from "@/utils/types";
 import { DeDustClient } from "@dedust/sdk";
 import { create } from "zustand";
-import { AxiosError } from "axios";
 
 type TStore = {
   deDustClient: DeDustClient | null;

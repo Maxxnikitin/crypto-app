@@ -1,6 +1,5 @@
 import { Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { DeDustClient, PoolData } from "@dedust/sdk";
+import { useEffect } from "react";
 import { PoolsTable } from "../pools-table";
 import { useDeDustStore } from "@/store/de-dust-store";
 import { Loader } from "../loader";

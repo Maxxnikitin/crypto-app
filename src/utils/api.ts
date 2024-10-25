@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { TCoinPriceRes, TCoinsList, TCoinsListRes } from "./types";
+import { TCoinPriceRes, TCoinsListRes } from "./types";
 
 export const checkResponse: <T>(res: AxiosResponse<T>) => T | Promise<T> = (
   res
