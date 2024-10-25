@@ -1,19 +1,19 @@
-import TonWeb from "tonweb";
+import { TonClient } from "@ton/ton";
 import { create } from "zustand";
 
 type TStore = {
   balance: number | null;
-  tonWebConnect: TonWeb | null;
+  tonWebClient: TonClient | null;
 
-  saveBalance: (wallet: number) => void;
-  saveTonWebConnect: (tonWebConnect: TonWeb) => void;
+  saveBalance: (balance: number) => void;
+  saveTonWebClient: (tonWebClient: TonClient) => void;
 };
 
 export const useTonWebStore = create<TStore>((set) => ({
   balance: null,
-  tonWebConnect: null,
+  tonWebClient: null,
 
   saveBalance: (balance) => set({ balance }),
 
-  saveTonWebConnect: (tonWebConnect) => set({ tonWebConnect }),
+  saveTonWebClient: (tonWebClient) => set({ tonWebClient }),
 }));

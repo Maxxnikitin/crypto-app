@@ -3,7 +3,7 @@ import { useTonWebStore } from "@/store/ton-web-store";
 import { useWalletsStore } from "@/store/wallets-store";
 import TonConnect, { WalletInfo } from "@tonconnect/sdk";
 import { useEffect, useState } from "react";
-import TonWeb from "tonweb";
+import { Address, TonClient } from "@ton/ton";
 
 export const useWalletConnect = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
@@ -18,7 +18,7 @@ export const useWalletConnect = () => {
     saveWallet,
     handleConnectClick,
   } = useWalletsStore();
-  const { balance, saveTonWebConnect, saveBalance } = useTonWebStore();
+  const { balance, saveTonWebClient, saveBalance } = useTonWebStore();
 
   const handleClose = () => {
     setIsModalOpen(false);
@@ -67,9 +67,11 @@ export const useWalletConnect = () => {
 
     saveTonConnect(tonConnect);
 
-    const tonWebConnect = new TonWeb();
+    const tonClient = new TonClient({
+      endpoint: "https://toncenter.com/api/v2/jsonRPC",
+    });
 
-    saveTonWebConnect(tonWebConnect);
+    saveTonWebClient(tonClient);
 
     tonConnect.restoreConnection();
 
@@ -78,11 +80,11 @@ export const useWalletConnect = () => {
         saveWallet(walletInfo);
         handleClose();
 
-        const address = walletInfo.account.address;
+        const address = walletInfo.account.address as unknown as Address;
 
-        const nanoTon = await tonWebConnect.provider.getBalance(address);
+        const nanoTon = await tonClient.getBalance(address);
 
-        const ton = +(nanoTon as string) / 1e9;
+        const ton = Number(nanoTon) / 1e9;
 
         saveBalance(ton);
       } else {
@@ -93,7 +95,7 @@ export const useWalletConnect = () => {
     return () => {
       unsubscribe();
     };
-  }, [saveBalance, saveWallet, saveTonConnect, saveTonWebConnect]);
+  }, [saveBalance, saveWallet, saveTonConnect, saveTonWebClient]);
 
   return {
     wallet,

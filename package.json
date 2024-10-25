@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dedust/sdk": "^0.8.7",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.4",
     "@mui/material": "^6.1.4",
-    "@ston-fi/sdk": "^1.2.0",
+    "@mui/x-data-grid": "^7.21.0",
+    "@ton/ton": "^15.1.0",
     "@tonconnect/sdk": "^3.0.5",
     "@twa-dev/sdk": "^7.10.1",
     "next": "14.2.15",
