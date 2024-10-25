@@ -6,15 +6,13 @@
   --button-primary-hover: #383838;
   --button-secondary-hover: #f2f2f2;
 
-  display: grid;
-  grid-template-rows: 20px 1fr 20px;
-  align-items: center;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
   min-height: 100svh;
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  gap: 64px;
+  gap: 20px;
   font-family: var(--font-geist-sans);
 }
 

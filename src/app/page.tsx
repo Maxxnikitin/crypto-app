@@ -10,6 +10,7 @@ import {
 } from "./shared/theme";
 import { Header } from "./components/header";
 import { useTelegram } from "./shared/hooks/use-telegram";
+import { Pools } from "./components/pools";
 
 export default function Home() {
   const [themeMode, setThemeMode] = useState<ThemeMode>(DEFAULT_THEME_MODE);
@@ -31,6 +32,7 @@ export default function Home() {
     <ThemeProvider theme={theme}>
       <div className={styles.page}>
         <Header />
+        <Pools />
       </div>
     </ThemeProvider>
   );
