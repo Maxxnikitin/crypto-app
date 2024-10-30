@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dedust/sdk": "^0.8.7",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.4",
