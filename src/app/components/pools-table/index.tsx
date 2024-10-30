@@ -1,23 +1,25 @@
-import { TFullPoolData } from "@/utils/types";
+import { TFullPool, TFullPoolData } from "@/utils/types";
 import { Box, Paper, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 type TProps = {
-  data: TFullPoolData[];
+  data: TFullPool[];
 };
 
 export const PoolsTable = ({ data }: TProps) => {
+  const handleRowClick = () => console.log(222);
+
   const columns: GridColDef[] = [
     {
       field: "name",
-      headerName: "Pool name",
-      flex: 1,
+      headerName: "Пара",
+      flex: 2,
       renderCell: ({ row }) => (
         <Stack direction="row" alignItems="center">
           <Box sx={{ position: "relative", width: 40, height: 24 }}>
             <Box
               component="img"
-              src={row.assets[0].metadata.image}
+              src={row.gotTokens.token0.image_url}
               alt="icon1"
               style={{
                 width: 24,
@@ -29,7 +31,7 @@ export const PoolsTable = ({ data }: TProps) => {
             />
             <Box
               component="img"
-              src={row.assets[1].metadata.image}
+              src={row.gotTokens.token1.image_url}
               alt="icon2"
               style={{
                 width: 24,
@@ -42,31 +44,55 @@ export const PoolsTable = ({ data }: TProps) => {
             />
           </Box>
           <span style={{ marginLeft: 8 }}>
-            {`${row.assets[0].metadata.symbol}/${row.assets[1].metadata.symbol}`}
+            {`${row.gotTokens.token0.symbol}/${row.gotTokens.token1.symbol}`}
           </span>
         </Stack>
       ),
+      disableColumnMenu: true,
     },
     {
       field: "tvl",
-      headerName: "Volume 24h / TVL",
+      headerName: "TVL",
       flex: 1,
       headerAlign: "right",
       align: "right",
       renderCell: ({ row }) => (
-        <Stack direction="column">
-          <Typography>${row.addition?.commonVolume.toFixed(2)}</Typography>{" "}
-          <Typography>${row.addition?.tvl.toFixed(2)}</Typography>
-        </Stack>
+        <Typography>
+          $
+          {row.tvl.toLocaleString("en", {
+            notation: "compact",
+            compactDisplay: "short",
+            maximumFractionDigits: 2,
+          })}
+        </Typography>
       ),
+      disableColumnMenu: true,
+    },
+    {
+      field: "apr",
+      headerName: "APR",
+      flex: 1,
+      headerAlign: "right",
+      align: "right",
+      renderCell: ({ row }) => (
+        <Typography>
+          {row.apr.toLocaleString("en", {
+            notation: "compact",
+            compactDisplay: "short",
+            maximumFractionDigits: 2,
+          })}
+          %
+        </Typography>
+      ),
+      disableColumnMenu: true,
     },
   ];
 
   const rows = data.map((item, index) => ({
     id: index,
-    assets: item.assets,
-    stats: item.stats,
-    addition: item.addition,
+    gotTokens: item.gotTokens,
+    tvl: +item.lp_total_supply_usd,
+    apr: +item.farming.apy,
   }));
 
   const paginationModel = { page: 0, pageSize: 20 };
@@ -76,8 +102,15 @@ export const PoolsTable = ({ data }: TProps) => {
       <DataGrid
         rows={rows}
         columns={columns}
+        rowHeight={60}
         initialState={{ pagination: { paginationModel } }}
-        sx={{ border: 0 }}
+        onRowClick={handleRowClick}
+        sx={{
+          "& .MuiDataGrid-cell:focus": {
+            outline: "none",
+          },
+          border: 0,
+        }}
       />
     </Paper>
   );

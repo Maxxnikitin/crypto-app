@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { TCoinPriceRes, TCoinsListRes } from "./types";
+import { TGetPoolsRes, TGetPoolsWithFarmingRes, TGetTokenRes } from "./types";
 
 export const checkResponse: <T>(res: AxiosResponse<T>) => T | Promise<T> = (
   res
@@ -10,26 +10,24 @@ export const checkResponse: <T>(res: AxiosResponse<T>) => T | Promise<T> = (
   return Promise.reject(res);
 };
 
-const coinMarketInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_COIN_MARKET_API_URL,
+const stonFiInstance = axios.create({
+  baseURL: process.env.STONFI_API_URL,
   headers: {
-    "Content-Type": "application/json",
-    "X-CMC_PRO_API_KEY": process.env.NEXT_PUBLIC_COIN_MARKET_API_KEY,
+    accept: "application/json",
   },
 });
 
-export const getCoinsList = (offset?: number) =>
-  coinMarketInstance
-    .get(`/v1/cryptocurrency/map?limit=5000&start=${offset ?? 1}`, {
-      method: "GET",
-      headers: { accept: "application/json" },
-    })
-    .then((res: AxiosResponse<TCoinsListRes>) => checkResponse(res));
+export const getPoolsWithFarming = () =>
+  stonFiInstance
+    .get("/v1/farms")
+    .then((res: AxiosResponse<TGetPoolsWithFarmingRes>) => checkResponse(res));
 
-export const getCoinQuote = (id: number) =>
-  coinMarketInstance
-    .get(`/v2/cryptocurrency/quotes/latest?id=${id}`, {
-      method: "GET",
-      headers: { accept: "application/json" },
-    })
-    .then((res: AxiosResponse<TCoinPriceRes>) => checkResponse(res));
+export const getPools = (address: string) =>
+  stonFiInstance
+    .get(`/v1/pools/${address}`)
+    .then((res: AxiosResponse<TGetPoolsRes>) => checkResponse(res));
+
+export const getToken = (address: string) =>
+  stonFiInstance
+    .get(`/v1/assets/${address}`)
+    .then((res: AxiosResponse<TGetTokenRes>) => checkResponse(res));

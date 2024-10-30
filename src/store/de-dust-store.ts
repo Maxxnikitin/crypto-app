@@ -142,6 +142,16 @@ export const useDeDustStore = create<TStore>((set) => ({
           10 ** pools[index].assets[1].metadata.decimals) *
         price2;
 
+      const coin1FeesInDollar =
+        (+pools[index].stats.fees[0] /
+          10 ** pools[index].assets[0].metadata.decimals) *
+        price2;
+
+      const coin2FeesInDollar =
+        (+pools[index].stats.fees[1] /
+          10 ** pools[index].assets[1].metadata.decimals) *
+        price2;
+
       const addition = {
         coin1Rate: price1,
         coin2Rate: price2,
@@ -150,7 +160,14 @@ export const useDeDustStore = create<TStore>((set) => ({
         tvl: coin1InDollar + coin2InDollar,
         coin1VolumeInDollar,
         coin2VolumeInDollar,
-        commonVolume: coin1VolumeInDollar + coin2VolumeInDollar,
+        commonVolume: (coin1VolumeInDollar + coin2VolumeInDollar) / 2,
+        coin1FeesInDollar,
+        coin2FeesInDollar,
+        apr:
+          ((coin1FeesInDollar + coin2FeesInDollar) /
+            2 /
+            (coin1InDollar + coin2InDollar)) *
+          100,
       };
 
       filteredPools.push({ ...pools[index], addition });
@@ -168,6 +185,8 @@ export const useDeDustStore = create<TStore>((set) => ({
     const filteredAndSortedPools = filteredPools.sort(
       (a, b) => b.addition.commonVolume - a.addition.commonVolume
     );
+
+    console.log(filteredAndSortedPools[7]);
 
     localStorage.setItem("prevPools", JSON.stringify(filteredAndSortedPools));
 
