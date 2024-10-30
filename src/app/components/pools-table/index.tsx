@@ -1,4 +1,4 @@
-import { TFullPool, TFullPoolData } from "@/utils/types";
+import { TFullPool } from "@/utils/types";
 import { Box, Paper, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
