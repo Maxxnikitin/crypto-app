@@ -10,7 +10,7 @@ export const CustomButton = (props: TProps) => {
         minHeight: 50,
         minWidth: 50,
         width: "100%",
-        borderRadius: 2,
+        borderRadius: 4,
         backgroundColor: "rgba(73, 41, 255, 1)",
         color: "white",
         fontSize: 16,

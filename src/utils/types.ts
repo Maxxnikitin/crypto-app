@@ -99,6 +99,8 @@ export type Asset = {
 export type TFrontPool = {
   tvl: number;
   apr: number;
+  rewardsTotal: number;
+  rewards24: number;
   token0: {
     image: string;
     symbol: string;

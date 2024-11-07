@@ -17,6 +17,7 @@ export const Loader = ({ size = 40, isInline = false, className }: Props) => (
       width: isInline ? "fit-content" : "100%",
       height: "100%",
       background: isInline ? "none" : "rgba(0, 0, 0, .3)",
+      zIndex: 5,
     }}
     className={className}
   >

@@ -9,6 +9,7 @@ import {
 } from "./shared/theme";
 import { Header } from "./components/header";
 import styles from "./page.module.css";
+import { Footer } from "./components/footer";
 
 export const ClientLayout = ({ children }: { children: ReactNode }) => {
   const [themeMode, setThemeMode] = useState<ThemeMode>(DEFAULT_THEME_MODE);
@@ -29,6 +30,7 @@ export const ClientLayout = ({ children }: { children: ReactNode }) => {
       <div className={styles.page}>
         <Header />
         {children}
+        <Footer />
       </div>
     </ThemeProvider>
   );

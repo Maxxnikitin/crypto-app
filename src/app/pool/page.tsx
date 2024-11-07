@@ -9,13 +9,14 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { ReactEventHandler, useState } from "react";
+import { Fragment, ReactEventHandler, useEffect, useState } from "react";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useRouter } from "next/navigation";
 import { POOL_DATA_TABLE_ROWS } from "./constants";
 import { CustomButton } from "../components/custom-button";
 import { TPollModalData } from "../shared/types/pool";
 import { CustomModal } from "../components/custom-modal";
+import { Loader } from "../components/loader";
 
 export default function Pool() {
   const { currentPool } = useStonFiStore();
@@ -35,10 +36,16 @@ export default function Pool() {
     setTimeout(() => setModalData(null), 300);
   };
 
+  useEffect(() => {
+    if (!currentPool) {
+      push("/");
+    }
+  }, []);
+
   if (!currentPool) {
-    push("/");
-    return null;
+    return <Loader />;
   }
+
   return (
     <Box
       sx={{
@@ -108,7 +115,7 @@ export default function Pool() {
         }}
       >
         {POOL_DATA_TABLE_ROWS.map((item, index) => (
-          <>
+          <Fragment key={index}>
             <Stack
               key={index}
               direction="row"
@@ -152,14 +159,10 @@ export default function Pool() {
               </IconButton>
             </Stack>
             {index !== POOL_DATA_TABLE_ROWS.length - 1 && <Divider />}
-          </>
+          </Fragment>
         ))}
       </Box>
-      <CustomModal
-        modalData={modalData}
-        isModalOpen={isModalOpen}
-        handleClose={handleClose}
-      >
+      <CustomModal isModalOpen={isModalOpen} handleClose={handleClose}>
         <Box>
           <Typography variant="h6" gutterBottom>
             {modalData?.title}
