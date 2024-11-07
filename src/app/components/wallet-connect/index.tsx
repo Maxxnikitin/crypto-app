@@ -11,7 +11,6 @@ type TProps = {
 
 export const WalletConnect = ({ sx }: TProps) => {
   const {
-    wallet,
     wallets,
     qrCodeUrl,
     connectionLink,
@@ -20,8 +19,6 @@ export const WalletConnect = ({ sx }: TProps) => {
     handleWalletClick,
     handleConnectBtnClick,
   } = useWalletConnect();
-
-  if (wallet) return null;
 
   return (
     <Stack sx={{ width: "100%", maxWidth: "400px", paddingX: 2, ...sx }}>

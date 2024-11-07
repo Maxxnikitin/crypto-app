@@ -1,7 +1,12 @@
 import { Box, Stack } from "@mui/material";
 import { WalletConnect } from "../wallet-connect";
+import { useWalletsStore } from "@/store/wallets-store";
 
 export const Footer = () => {
+  const { wallet } = useWalletsStore();
+
+  if (!wallet) return null;
+
   return (
     <Stack
       direction="row"
