@@ -1,16 +1,16 @@
-import { IconButton, Menu, Stack, Typography } from "@mui/material";
+import { IconButton, Menu, Stack, StackProps, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { MouseEventHandler, useState } from "react";
 
-type TProps = {
+type TProps = StackProps & {
   balance?: number | null;
   handleLogout: () => void;
 };
 
-export const UserInfo = ({ balance, handleLogout }: TProps) => {
+export const UserInfo = ({ balance, handleLogout, ...rest }: TProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleOpen: MouseEventHandler<HTMLButtonElement> = ({
@@ -24,11 +24,11 @@ export const UserInfo = ({ balance, handleLogout }: TProps) => {
   };
 
   return (
-    <Stack>
+    <Stack {...rest}>
       <IconButton
         aria-controls="user-data-menu"
         onClick={handleOpen}
-        sx={{ display: "flex", gap: 1, borderRadius: 2 }}
+        sx={{ display: "flex", gap: 1, borderRadius: 1 }}
       >
         <AccountCircleIcon />
         {anchorEl ? <CloseIcon /> : <MenuIcon />}
