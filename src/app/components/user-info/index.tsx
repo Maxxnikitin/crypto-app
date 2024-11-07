@@ -6,11 +6,17 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { MouseEventHandler, useState } from "react";
 
 type TProps = StackProps & {
+  isLogoutLoading: boolean;
   balance?: number | null;
   handleLogout: () => void;
 };
 
-export const UserInfo = ({ balance, handleLogout, ...rest }: TProps) => {
+export const UserInfo = ({
+  isLogoutLoading,
+  balance,
+  handleLogout,
+  ...rest
+}: TProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleOpen: MouseEventHandler<HTMLButtonElement> = ({
@@ -42,6 +48,7 @@ export const UserInfo = ({ balance, handleLogout, ...rest }: TProps) => {
         <Stack direction="column" pl={2} pr={2}>
           <IconButton
             onClick={handleLogout}
+            disabled={isLogoutLoading}
             sx={{ alignSelf: "flex-end", mb: 1 }}
           >
             <LogoutIcon />
