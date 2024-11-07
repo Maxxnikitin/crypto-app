@@ -40,7 +40,7 @@ export default function Pool() {
     if (!currentPool) {
       push("/");
     }
-  }, []);
+  }, [currentPool, push]);
 
   if (!currentPool) {
     return <Loader />;

@@ -1,13 +1,5 @@
 "use client";
-import {
-  Box,
-  Dialog,
-  DialogContent,
-  Link,
-  Stack,
-  SxProps,
-  Typography,
-} from "@mui/material";
+import { Box, Link, Stack, SxProps, Typography } from "@mui/material";
 
 import { useWalletConnect } from "./hooks";
 import { CustomButton } from "../custom-button";
