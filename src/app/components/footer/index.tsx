@@ -5,7 +5,7 @@ import { useWalletsStore } from "@/store/wallets-store";
 export const Footer = () => {
   const { wallet } = useWalletsStore();
 
-  if (!wallet) return null;
+  if (wallet) return null;
 
   return (
     <Stack
