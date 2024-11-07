@@ -7,7 +7,7 @@ import { useWalletConnect } from "../wallet-connect/hooks";
 import { useRouter, usePathname } from "next/navigation";
 
 export const Header = () => {
-  const { balance, handleLogout } = useUserData();
+  const { balance, isLogoutLoading, handleLogout } = useUserData();
   const { wallet } = useWalletConnect();
   const router = useRouter();
   const path = usePathname();
@@ -32,6 +32,7 @@ export const Header = () => {
       {wallet && (
         <UserInfo
           balance={balance}
+          isLogoutLoading={isLogoutLoading}
           handleLogout={handleLogout}
           sx={{ ml: "auto" }}
         />
