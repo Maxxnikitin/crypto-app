@@ -1,13 +1,20 @@
-import { TFullPool } from "@/utils/types";
+import { useStonFiStore } from "@/store/ston-fi-store";
+import { TFrontPool } from "@/utils/types";
 import { Box, Paper, Stack, Typography } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import { useRouter } from "next/navigation";
 
 type TProps = {
-  data: TFullPool[];
+  data: TFrontPool[];
 };
 
 export const PoolsTable = ({ data }: TProps) => {
-  const handleRowClick = () => console.log(222);
+  const { setCurrentPool } = useStonFiStore();
+  const { push } = useRouter();
+  const handleRowClick = ({ row }: GridRowParams) => {
+    setCurrentPool(row.data);
+    push("/pool");
+  };
 
   const columns: GridColDef[] = [
     {
@@ -16,35 +23,32 @@ export const PoolsTable = ({ data }: TProps) => {
       flex: 2,
       renderCell: ({ row }) => (
         <Stack direction="row" alignItems="center">
-          <Box sx={{ position: "relative", width: 40, height: 24 }}>
+          <Box sx={{ width: 44, height: 44 }}>
             <Box
               component="img"
-              src={row.gotTokens.token0.image_url}
+              src={row.token0.image}
               alt="icon1"
               style={{
                 width: 24,
                 height: 24,
-                position: "absolute",
                 borderRadius: "50%",
-                zIndex: 1,
+                marginRight: "-4px",
               }}
             />
             <Box
               component="img"
-              src={row.gotTokens.token1.image_url}
+              src={row.token1.image}
               alt="icon2"
               style={{
                 width: 24,
                 height: 24,
-                position: "absolute",
-                top: 0,
-                left: 16,
                 borderRadius: "50%",
+                clipPath: 'path("M 0,0 Q 12,12 0,24 L 24,24 L 24,0 Z")',
               }}
             />
           </Box>
           <span style={{ marginLeft: 8 }}>
-            {`${row.gotTokens.token0.symbol}/${row.gotTokens.token1.symbol}`}
+            {`${row.token0.symbol}/${row.token1.symbol}`}
           </span>
         </Stack>
       ),
@@ -57,14 +61,16 @@ export const PoolsTable = ({ data }: TProps) => {
       headerAlign: "right",
       align: "right",
       renderCell: ({ row }) => (
-        <Typography>
-          $
-          {row.tvl.toLocaleString("en", {
-            notation: "compact",
-            compactDisplay: "short",
-            maximumFractionDigits: 2,
-          })}
-        </Typography>
+        <Stack sx={{ height: "100%" }} justifyContent="center">
+          <Typography>
+            $
+            {row.tvl.toLocaleString("en", {
+              notation: "compact",
+              compactDisplay: "short",
+              maximumFractionDigits: 2,
+            })}
+          </Typography>
+        </Stack>
       ),
       disableColumnMenu: true,
     },
@@ -75,24 +81,25 @@ export const PoolsTable = ({ data }: TProps) => {
       headerAlign: "right",
       align: "right",
       renderCell: ({ row }) => (
-        <Typography>
-          {row.apr.toLocaleString("en", {
-            notation: "compact",
-            compactDisplay: "short",
-            maximumFractionDigits: 2,
-          })}
-          %
-        </Typography>
+        <Stack sx={{ height: "100%" }} justifyContent="center">
+          <Typography>
+            {row.apr.toLocaleString("en", {
+              notation: "compact",
+              compactDisplay: "short",
+              maximumFractionDigits: 2,
+            })}
+            %
+          </Typography>
+        </Stack>
       ),
       disableColumnMenu: true,
     },
   ];
 
   const rows = data.map((item, index) => ({
+    ...item,
     id: index,
-    gotTokens: item.gotTokens,
-    tvl: +item.lp_total_supply_usd,
-    apr: +item.farming.apy,
+    data: item,
   }));
 
   const paginationModel = { page: 0, pageSize: 20 };

@@ -18,18 +18,12 @@ export const useWalletConnect = () => {
     saveWallet,
     handleConnectClick,
   } = useWalletsStore();
-  const { balance, saveTonWebClient, saveBalance } = useTonWebStore();
+  const { saveTonWebClient, saveBalance } = useTonWebStore();
 
   const handleClose = () => {
     setIsModalOpen(false);
     setQrCodeUrl(null);
     setConnectionLink(null);
-  };
-
-  const handleLogout = () => {
-    if (tonConnect?.connect) {
-      tonConnect?.disconnect();
-    }
   };
 
   const handleConnectBtnClick = async () => {
@@ -103,9 +97,7 @@ export const useWalletConnect = () => {
     qrCodeUrl,
     connectionLink,
     isModalOpen,
-    balance,
     handleClose,
-    handleLogout,
     handleWalletClick,
     handleConnectBtnClick,
   };

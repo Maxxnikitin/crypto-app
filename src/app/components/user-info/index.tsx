@@ -28,7 +28,7 @@ export const UserInfo = ({ balance, handleLogout }: TProps) => {
       <IconButton
         aria-controls="user-data-menu"
         onClick={handleOpen}
-        sx={{ display: "flex", gap: 1 }}
+        sx={{ display: "flex", gap: 1, borderRadius: 2 }}
       >
         <AccountCircleIcon />
         {anchorEl ? <CloseIcon /> : <MenuIcon />}
