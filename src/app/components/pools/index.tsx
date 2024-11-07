@@ -8,8 +8,8 @@ export const Pools = () => {
   const { pools, isPoolsLoading, getPools } = useStonFiStore();
 
   useEffect(() => {
-    getPools();
-  }, [getPools]);
+    if (!pools) getPools();
+  }, [pools, getPools]);
 
   if (isPoolsLoading) return <Loader />;
 

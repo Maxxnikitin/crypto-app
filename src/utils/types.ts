@@ -96,15 +96,20 @@ export type Asset = {
   wallet_address: string;
 };
 
-export type TFullPool = TPool & {
-  gotTokens: {
-    token0: Asset;
-    token1: Asset;
+export type TFrontPool = {
+  tvl: number;
+  apr: number;
+  token0: {
+    image: string;
+    symbol: string;
   };
-  farming: FarmList;
+  token1: {
+    image: string;
+    symbol: string;
+  };
 };
 
-export type TFullPoolsRes = {
-  data: TFullPool[];
+export type TFrontPoolsRes = {
+  data: TFrontPool[];
   message: string;
 };

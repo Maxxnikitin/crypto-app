@@ -1,16 +1,19 @@
 import { getPoolsRequest } from "@/utils/api-front";
-import { TFullPool } from "@/utils/types";
+import { TFrontPool } from "@/utils/types";
 import { create } from "zustand";
 
 type TStore = {
-  pools: TFullPool[] | null;
+  pools: TFrontPool[] | null;
+  currentPool: TFrontPool | null;
   isPoolsLoading: boolean;
 
   getPools: () => Promise<void>;
+  setCurrentPool: (data: TFrontPool) => void;
 };
 
 export const useStonFiStore = create<TStore>((set) => ({
   pools: null,
+  currentPool: null,
   isPoolsLoading: false,
 
   getPools: async () => {
@@ -26,5 +29,9 @@ export const useStonFiStore = create<TStore>((set) => ({
       console.log(e);
       set({ isPoolsLoading: false });
     }
+  },
+
+  setCurrentPool: (currentPool) => {
+    set({ currentPool });
   },
 }));

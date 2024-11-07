@@ -18,6 +18,8 @@ export default async function handler(
       ({ status }) => status === "operational"
     );
 
+    // actualPoolsWithFarming.forEach((item) => console.log(item.rewards));
+
     const pools = await Promise.all(
       actualPoolsWithFarming.map(({ pool_address }) => getPools(pool_address))
     );
@@ -48,14 +50,17 @@ export default async function handler(
 
     for (let i = 0; i < pools.length; i++) {
       data.push({
-        ...pools[i].pool,
-        farming: actualPoolsWithFarming[i],
-        gotTokens: {
-          token0: tokens[tokenIndex].asset,
-          token1: tokens[tokenIndex + 1].asset,
+        tvl: +pools[i].pool.lp_total_supply_usd,
+        apr: +actualPoolsWithFarming[i].apy * 100,
+        token0: {
+          image: tokens[tokenIndex].asset.image_url,
+          symbol: tokens[tokenIndex].asset.symbol,
+        },
+        token1: {
+          image: tokens[tokenIndex + 1].asset.image_url,
+          symbol: tokens[tokenIndex + 1].asset.symbol,
         },
       });
-
       tokenIndex += 2;
     }
 
