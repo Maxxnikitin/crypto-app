@@ -3,7 +3,8 @@ import { useTonWebStore } from "@/store/ton-web-store";
 import { useWalletsStore } from "@/store/wallets-store";
 import TonConnect, { WalletInfo } from "@tonconnect/sdk";
 import { useEffect, useState } from "react";
-import { Address, TonClient } from "@ton/ton";
+import { TonClient } from "@ton/ton";
+import TonWeb from "tonweb";
 
 export const useWalletConnect = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
@@ -62,7 +63,7 @@ export const useWalletConnect = () => {
     saveTonConnect(tonConnect);
 
     const tonClient = new TonClient({
-      endpoint: "https://toncenter.com/api/v2/jsonRPC",
+      endpoint: "https://ton.org/get/toncenter.json",
     });
 
     saveTonWebClient(tonClient);
@@ -74,13 +75,62 @@ export const useWalletConnect = () => {
         saveWallet(walletInfo);
         handleClose();
 
-        const address = walletInfo.account.address as unknown as Address;
+        const tonweb = new TonWeb(
+          new TonWeb.HttpProvider(process.env.NEXT_PUBLIC_TON_WEB_PROVIDER, {
+            apiKey: process.env.NEXT_PUBLIC_TON_WEB_API,
+          })
+        );
 
-        const nanoTon = await tonClient.getBalance(address);
+        const address = walletInfo.account.address;
 
-        const ton = Number(nanoTon) / 1e9;
+        // получаем баланс в ТОНах
+        const addressInfo = await tonweb.provider.getAddressInfo(address);
+        const ton = +TonWeb.utils.fromNano(addressInfo.balance);
 
-        saveBalance(ton);
+        // пока хардкодим
+        const usdtMasterJetton =
+          "EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs";
+
+        const rawData = await tonweb.provider.call2(
+          usdtMasterJetton,
+          "get_jetton_data",
+          []
+        );
+
+        // Расшифровываем данные
+        const [_totalSupply, _decimals, contentCell, walletCodeCell] = rawData;
+        const adminAddress = rawData[4]; // Адрес администратора из master data
+        const jettonContentUri = contentCell.bits.toString(); // URI контента
+        const jettonWalletCodeHex = walletCodeCell.toString("hex"); // Байткод кошелька
+
+        const jettonMinter = new TonWeb.token.jetton.JettonMinter(
+          tonweb.provider,
+          {
+            address: usdtMasterJetton,
+            adminAddress: adminAddress,
+            jettonContentUri: jettonContentUri,
+            jettonWalletCodeHex: jettonWalletCodeHex,
+          }
+        );
+
+        const jettonWalletAddress = await jettonMinter.getJettonWalletAddress(
+          new TonWeb.utils.Address(address)
+        );
+
+        const jettonWallet = new TonWeb.token.jetton.JettonWallet(
+          tonweb.provider,
+          {
+            address: jettonWalletAddress,
+          }
+        );
+
+        const data = await jettonWallet.getData();
+        const balanceMinimal = data.balance.toString();
+
+        // Преобразуем в стандартный формат
+        const balanceStandard = parseFloat(balanceMinimal) / Math.pow(10, 6);
+
+        saveBalance({ ton, usdt: balanceStandard });
       } else {
         saveWallet(null);
       }

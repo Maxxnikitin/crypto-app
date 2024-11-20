@@ -17,9 +17,11 @@ import { CustomButton } from "../components/custom-button";
 import { TPollModalData } from "../shared/types/pool";
 import { CustomModal } from "../components/custom-modal";
 import { Loader } from "../components/loader";
+import { useWalletsStore } from "@/store/wallets-store";
 
 export default function Pool() {
   const { currentPool } = useStonFiStore();
+  const { wallet } = useWalletsStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<TPollModalData | null>(null);
 
@@ -52,6 +54,7 @@ export default function Pool() {
         borderRadius: 2,
         textAlign: "center",
         maxWidth: 400,
+        width: "100%",
         margin: "0 auto",
       }}
     >
@@ -101,13 +104,15 @@ export default function Pool() {
 
       <Chip label="Надежный" color="success" sx={{ mb: 2 }} />
 
-      <Typography variant="body2" color="gray">
-        Подключите кошелек, чтобы войти в пул и все будет супер пупер
-      </Typography>
+      {wallet ? null : (
+        <Typography variant="body2" color="gray">
+          Подключите кошелек, чтобы войти в пул и все будет супер пупер
+        </Typography>
+      )}
 
       <Box
         sx={{
-          backgroundColor: "#22223b",
+          backgroundColor: "var(--blocksBackground)",
           borderRadius: 3,
           p: 2,
           mt: 3,
@@ -130,7 +135,7 @@ export default function Pool() {
                     fontWeight: 400,
                     fontSize: "13px",
                     lineHeight: "20px",
-                    color: "rgba(255, 255, 255, 0.48)",
+                    color: "var(--labelColor)",
                   }}
                   variant="subtitle1"
                 >

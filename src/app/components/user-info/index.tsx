@@ -4,10 +4,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { MouseEventHandler, useState } from "react";
+import { TBalance } from "@/utils/types";
 
 type TProps = StackProps & {
   isLogoutLoading: boolean;
-  balance?: number | null;
+  balance?: TBalance | null;
   handleLogout: () => void;
 };
 
@@ -57,7 +58,10 @@ export const UserInfo = ({
             BALANCE:
           </Typography>
           <Typography variant="h5" align="center">
-            {balance?.toFixed(4) ?? 0} TON
+            TON: {balance?.ton.toFixed(4) ?? 0}
+          </Typography>
+          <Typography variant="h5" align="center">
+            USDT: {balance?.usdt.toFixed(4) ?? 0}
           </Typography>
         </Stack>
       </Menu>

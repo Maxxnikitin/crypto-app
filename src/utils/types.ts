@@ -115,3 +115,8 @@ export type TFrontPoolsRes = {
   data: TFrontPool[];
   message: string;
 };
+
+export type TBalance = {
+  usdt: number;
+  ton: number;
+};

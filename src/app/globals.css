@@ -1,7 +1,4 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-
   --backgroundLinearGradient: linear-gradient(
     to bottom,
     rgba(22, 1, 78, 1),
@@ -15,6 +12,13 @@
     rgba(1, 10, 49, 1) 50%,
     rgba(0, 3, 23, 1) 100%
   );
+
+  --blocksBackground: #22223b;
+
+  --labelColor: rgba(255, 255, 255, 0.48);
+
+  --background: var(--backgroundLinearGradient);
+  --foreground: #ededed;
 }
 
 @media (prefers-color-scheme: dark) {

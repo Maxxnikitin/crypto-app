@@ -1,11 +1,12 @@
+import { TBalance } from "@/utils/types";
 import { TonClient } from "@ton/ton";
 import { create } from "zustand";
 
 type TStore = {
-  balance: number | null;
+  balance: TBalance | null;
   tonWebClient: TonClient | null;
 
-  saveBalance: (balance: number) => void;
+  saveBalance: (balance: TBalance) => void;
   saveTonWebClient: (tonWebClient: TonClient) => void;
 };
 
