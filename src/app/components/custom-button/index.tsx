@@ -11,11 +11,11 @@ export const CustomButton = (props: TProps) => {
         minWidth: 50,
         width: "100%",
         borderRadius: 4,
-        backgroundColor: "rgba(73, 41, 255, 1)",
+        backgroundColor: "var(--buttonBg)",
         color: "white",
         fontSize: 16,
         "&:hover": {
-          backgroundColor: "rgba(53, 21, 235, 1)",
+          backgroundColor: "var(--buttonHoverBg)",
         },
       }}
     />

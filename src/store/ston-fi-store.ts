@@ -1,9 +1,10 @@
 import { getPoolsRequest } from "@/utils/api-front";
-import { TFrontPool } from "@/utils/types";
+import { TFrontPool, TSwapTokensData } from "@/utils/types";
 import { create } from "zustand";
 
 type TStore = {
   pools: TFrontPool[] | null;
+  swapTokensData: TSwapTokensData | null;
   currentPool: TFrontPool | null;
   isPoolsLoading: boolean;
 
@@ -13,6 +14,7 @@ type TStore = {
 
 export const useStonFiStore = create<TStore>((set) => ({
   pools: null,
+  swapTokensData: null,
   currentPool: null,
   isPoolsLoading: false,
 
@@ -22,7 +24,8 @@ export const useStonFiStore = create<TStore>((set) => ({
       const { data } = await getPoolsRequest();
 
       set({
-        pools: data,
+        pools: data.data,
+        swapTokensData: data.swapTokensData,
         isPoolsLoading: false,
       });
     } catch (e) {

@@ -12,15 +12,16 @@ import {
 import { Fragment, ReactEventHandler, useEffect, useState } from "react";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useRouter } from "next/navigation";
-import { POOL_DATA_TABLE_ROWS } from "./constants";
 import { CustomButton } from "../components/custom-button";
 import { TPollModalData } from "../shared/types/pool";
 import { CustomModal } from "../components/custom-modal";
 import { Loader } from "../components/loader";
 import { useWalletsStore } from "@/store/wallets-store";
+import { SwapBlock } from "../components/swap-block";
+import { POOL_DATA_TABLE_ROWS } from "../shared/constants/pools";
 
 export default function Pool() {
-  const { currentPool } = useStonFiStore();
+  const { currentPool, swapTokensData } = useStonFiStore();
   const { wallet } = useWalletsStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<TPollModalData | null>(null);
@@ -44,7 +45,7 @@ export default function Pool() {
     }
   }, [currentPool, push]);
 
-  if (!currentPool) {
+  if (!currentPool || !swapTokensData) {
     return <Loader />;
   }
 
@@ -104,11 +105,11 @@ export default function Pool() {
 
       <Chip label="Надежный" color="success" sx={{ mb: 2 }} />
 
-      {wallet ? null : (
-        <Typography variant="body2" color="gray">
-          Подключите кошелек, чтобы войти в пул и все будет супер пупер
-        </Typography>
-      )}
+      <SwapBlock
+        wallet={wallet}
+        currentPool={currentPool}
+        swapTokensData={swapTokensData}
+      />
 
       <Box
         sx={{

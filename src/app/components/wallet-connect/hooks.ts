@@ -62,12 +62,6 @@ export const useWalletConnect = () => {
 
     saveTonConnect(tonConnect);
 
-    const tonClient = new TonClient({
-      endpoint: "https://ton.org/get/toncenter.json",
-    });
-
-    saveTonWebClient(tonClient);
-
     tonConnect.restoreConnection();
 
     const unsubscribe = tonConnect.onStatusChange(async (walletInfo) => {
@@ -80,6 +74,8 @@ export const useWalletConnect = () => {
             apiKey: process.env.NEXT_PUBLIC_TON_WEB_API,
           })
         );
+
+        saveTonWebClient(tonweb);
 
         const address = walletInfo.account.address;
 
