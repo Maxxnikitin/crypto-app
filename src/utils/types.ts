@@ -96,11 +96,25 @@ export type Asset = {
   wallet_address: string;
 };
 
+export type TRewardsPerCoin = {
+  symbol: string;
+  remainingDaysForTokenString: string;
+  remainingDaysForToken: number;
+  rewards24Usd: number;
+};
+
 export type TFrontPool = {
   tvl: number;
   apr: number;
   rewardsTotal: number;
+  rewardsTotalUsd: number;
   rewards24: number;
+  rewards24Usd: number;
+  lockedTotalLp: number;
+  lockedTotalLpUsd: number;
+  remainingDaysForTokenString: string;
+  remainingDaysForToken: number;
+  rewardsPerCoin: TRewardsPerCoin[];
   token0: {
     image: string;
     symbol: string;
@@ -111,8 +125,16 @@ export type TFrontPool = {
   };
 };
 
+export type TSwapTokensData = Record<
+  TCoins,
+  { image_url?: string; dex_usd_price?: string }
+>;
+
 export type TFrontPoolsRes = {
-  data: TFrontPool[];
+  data: {
+    data: TFrontPool[];
+    swapTokensData: TSwapTokensData;
+  };
   message: string;
 };
 
@@ -120,3 +142,5 @@ export type TBalance = {
   usdt: number;
   ton: number;
 };
+
+export type TCoins = "TON" | "USDT";

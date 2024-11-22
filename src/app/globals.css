@@ -19,6 +19,11 @@
 
   --background: var(--backgroundLinearGradient);
   --foreground: #ededed;
+
+  --buttonBg: rgb(73, 41, 255);
+  --buttonHoverBg: rgb(53, 21, 235);
+
+  --accentColor: rgb(91, 97, 255);
 }
 
 @media (prefers-color-scheme: dark) {

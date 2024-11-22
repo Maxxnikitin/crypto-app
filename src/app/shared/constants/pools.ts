@@ -1,4 +1,4 @@
-import { TPoolTableRow } from "../shared/types/pool";
+import { TPoolTableRow } from "../types/pool";
 
 export const POOL_DATA_TABLE_ROWS: TPoolTableRow[] = [
   {
@@ -19,7 +19,7 @@ export const POOL_DATA_TABLE_ROWS: TPoolTableRow[] = [
   },
   {
     label: "Доступный доход",
-    value: "rewardsTotal",
+    value: "rewardsTotalUsd",
     modalData: {
       title: "Годовая доходность (APY)",
       text: "APY означает годовую процентную доходность. Это способ расчета процентов по инвестициям, учитывающий эффект сложного процента. В традиционных финансах APY используется для таких продуктов, как сберегательные счета и депозитные сертификаты.",
@@ -28,7 +28,7 @@ export const POOL_DATA_TABLE_ROWS: TPoolTableRow[] = [
   },
   {
     label: "Общий доход за 24 часа",
-    value: "rewards24",
+    value: "rewards24Usd",
     modalData: {
       title: "Годовая доходность (APY)",
       text: "APY означает годовую процентную доходность. Это способ расчета процентов по инвестициям, учитывающий эффект сложного процента. В традиционных финансах APY используется для таких продуктов, как сберегательные счета и депозитные сертификаты.",

@@ -1,5 +1,6 @@
 import { getPools, getPoolsWithFarming, getToken } from "@/utils/api";
-import { Asset } from "@/utils/types";
+import { convertToDaysAndHours, findMaxRemainingDays } from "@/utils/helpers";
+import { Asset, TFrontPool, TSwapTokensData } from "@/utils/types";
 import { AxiosError } from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -92,29 +93,72 @@ export default async function handler(
 
     for (let i = 0; i < pools.length; i++) {
       const { rewards } = actualPoolsWithFarming[i];
-      const { rewardsTotal, rewards24 } = rewards.reduce<
-        Record<"rewardsTotal" | "rewards24", number>
+      const {
+        rewardsTotal,
+        rewards24,
+        rewardsTotalUsd,
+        rewards24Usd,
+        rewardsPerCoin,
+      } = rewards.reduce<
+        Pick<
+          TFrontPool,
+          | "rewardsTotal"
+          | "rewards24"
+          | "rewardsTotalUsd"
+          | "rewards24Usd"
+          | "rewardsPerCoin"
+        >
       >(
         (acc, item) => {
           if (item.status !== "active") return acc;
 
-          const { decimals, dex_usd_price } = tokensMap[item.address];
+          const { decimals, dex_usd_price, symbol } = tokensMap[item.address];
 
-          acc.rewardsTotal +=
-            (+item.remaining_rewards / 10 ** decimals) * +dex_usd_price;
-          acc.rewards24 +=
-            (+item.reward_rate_24h / 10 ** decimals) * +dex_usd_price;
+          const remainingRewards = +item.remaining_rewards / 10 ** decimals;
+          const rewardRate24 = +item.reward_rate_24h / 10 ** decimals;
+
+          acc.rewardsTotal += remainingRewards;
+          acc.rewardsTotalUsd += remainingRewards * +dex_usd_price;
+          acc.rewards24 += rewardRate24;
+          acc.rewards24Usd += rewardRate24 * +dex_usd_price;
+
+          acc.rewardsPerCoin.push({
+            symbol,
+            rewards24Usd: rewardRate24 * +dex_usd_price,
+            remainingDaysForTokenString: convertToDaysAndHours(
+              remainingRewards / rewardRate24
+            ),
+            remainingDaysForToken: remainingRewards / rewardRate24,
+          });
 
           return acc;
         },
-        { rewardsTotal: 0, rewards24: 0 }
+        {
+          rewardsTotal: 0,
+          rewards24: 0,
+          rewardsTotalUsd: 0,
+          rewards24Usd: 0,
+          rewardsPerCoin: [],
+        }
       );
+
+      if (!rewardsTotalUsd) break;
+
+      const maxRewardsDays = findMaxRemainingDays(rewardsPerCoin);
 
       data.push({
         tvl: +pools[i].pool.lp_total_supply_usd,
         apr: +actualPoolsWithFarming[i].apy * 100,
         rewardsTotal,
+        rewardsTotalUsd,
         rewards24,
+        rewards24Usd,
+        remainingDaysForTokenString:
+          maxRewardsDays?.remainingDaysForTokenString,
+        remainingDaysForToken: maxRewardsDays?.remainingDaysForToken,
+        rewardsPerCoin,
+        lockedTotalLp: actualPoolsWithFarming[i].locked_total_lp,
+        lockedTotalLpUsd: actualPoolsWithFarming[i].locked_total_lp_usd,
         token0: {
           image: tokens[tokenIndex].asset.image_url,
           symbol: tokens[tokenIndex].asset.symbol,
@@ -127,7 +171,42 @@ export default async function handler(
       tokenIndex += 2;
     }
 
-    res.status(200).json({ data, message: "success" });
+    // собираем данные по usdt и ton, чтобы на фронте удобно считать сразу
+
+    const swapTokensData: TSwapTokensData = { TON: {}, USDT: {} };
+
+    for (let key in tokensMap) {
+      if (
+        tokensMap[key].display_name === "Tether USD" &&
+        !swapTokensData.USDT.dex_usd_price
+      ) {
+        swapTokensData.USDT.dex_usd_price = tokensMap[key].dex_usd_price;
+        swapTokensData.USDT.image_url = tokensMap[key].image_url;
+      }
+
+      if (
+        tokensMap[key].display_name === "TON" &&
+        !swapTokensData.TON.dex_usd_price
+      ) {
+        swapTokensData.TON.dex_usd_price = tokensMap[key].dex_usd_price;
+        swapTokensData.TON.image_url = tokensMap[key].image_url;
+      }
+
+      if (
+        swapTokensData.TON.dex_usd_price &&
+        swapTokensData.USDT.dex_usd_price
+      ) {
+        break;
+      }
+    }
+
+    res.status(200).json({
+      data: {
+        data,
+        swapTokensData,
+      },
+      message: "success",
+    });
   } catch (e) {
     const error = e as AxiosError;
     res.status(error.response?.status ?? 405).json({ message: error.message });
