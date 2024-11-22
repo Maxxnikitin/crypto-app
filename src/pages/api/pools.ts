@@ -142,7 +142,7 @@ export default async function handler(
         }
       );
 
-      if (!rewardsTotalUsd) break;
+      if (!rewardsTotalUsd) continue;
 
       const maxRewardsDays = findMaxRemainingDays(rewardsPerCoin);
 
