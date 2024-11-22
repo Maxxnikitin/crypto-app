@@ -175,7 +175,7 @@ export default async function handler(
 
     const swapTokensData: TSwapTokensData = { TON: {}, USDT: {} };
 
-    for (let key in tokensMap) {
+    for (const key in tokensMap) {
       if (
         tokensMap[key].display_name === "Tether USD" &&
         !swapTokensData.USDT.dex_usd_price
