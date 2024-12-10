@@ -40,7 +40,7 @@ export const SwapExchange = ({ swapTokensData, currentPool }: TProps) => {
   }) => {
     const val = +target.value;
     const dexPrice = +(swapTokensData[currency].dex_usd_price ?? "");
-    const calculatedPrice = val * dexPrice;
+    const calculatedPrice = val / dexPrice;
 
     setInputValue(target.value);
     setCalculatedValue(calculatedPrice);
