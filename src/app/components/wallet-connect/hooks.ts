@@ -3,7 +3,6 @@ import { useTonWebStore } from "@/store/ton-web-store";
 import { useWalletsStore } from "@/store/wallets-store";
 import TonConnect, { WalletInfo } from "@tonconnect/sdk";
 import { useEffect, useState } from "react";
-import { TonClient } from "@ton/ton";
 import TonWeb from "tonweb";
 
 export const useWalletConnect = () => {

@@ -19,7 +19,7 @@ const stonFiInstance = axios.create({
 
 export const getPoolsWithFarming = () =>
   stonFiInstance
-    .get("/v1/farms")
+    .get("/v1/farms?dex_v2=true")
     .then((res: AxiosResponse<TGetPoolsWithFarmingRes>) => checkResponse(res));
 
 export const getPools = (address: string) =>
