@@ -18,7 +18,14 @@ export const useTonWebStore = create<TStore>((set) => ({
   tonClient: null,
   tonWebClient: null,
 
-  saveBalance: (balance) => set({ balance }),
+  saveBalance: (balance) =>
+    set((state) => ({
+      ...state,
+      balance: {
+        ...state.balance,
+        ...balance,
+      },
+    })),
 
   saveTonClient: (tonClient) => set({ tonClient }),
   saveTonWebClient: (tonWebClient) => set({ tonWebClient }),

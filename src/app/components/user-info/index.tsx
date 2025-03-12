@@ -54,15 +54,19 @@ export const UserInfo = ({
           >
             <LogoutIcon />
           </IconButton>
-          <Typography variant="body1" align="center" mb={1}>
-            BALANCE:
-          </Typography>
-          <Typography variant="h5" align="center">
-            TON: {balance?.ton.toFixed(4) ?? 0}
-          </Typography>
-          <Typography variant="h5" align="center">
-            USDT: {balance?.usdt.toFixed(4) ?? 0}
-          </Typography>
+          {balance && (
+            <>
+              <Typography variant="body1" align="center" mb={1}>
+                BALANCE:
+              </Typography>
+              <Typography variant="h5" align="center">
+                TON: {balance?.ton?.toFixed(4) ?? 0}
+              </Typography>
+              <Typography variant="h5" align="center">
+                USDT: {balance?.usdt?.toFixed(4) ?? 0}
+              </Typography>
+            </>
+          )}
         </Stack>
       </Menu>
     </Stack>

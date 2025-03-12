@@ -56,8 +56,8 @@ export const SwapInput = ({
           type="number"
           slotProps={{
             input: {
-              endAdornment: (
-                <InputAdornment position="end">
+              startAdornment: (
+                <InputAdornment position="start">
                   <Typography variant="body1">$</Typography>
                 </InputAdornment>
               ),

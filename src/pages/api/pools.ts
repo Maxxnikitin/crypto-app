@@ -116,6 +116,9 @@ export default async function handler(
 
           const remainingRewards = +item.remaining_rewards / 10 ** decimals;
           const rewardRate24 = +item.reward_rate_24h / 10 ** decimals;
+          const remainingDaysForToken = remainingRewards / rewardRate24;
+
+          if (remainingDaysForToken < 0.0416667) return acc; // если реварду жить меньше часа, то не учитываем
 
           acc.rewardsTotal += remainingRewards;
           acc.rewardsTotalUsd += remainingRewards * +dex_usd_price;
@@ -126,9 +129,9 @@ export default async function handler(
             symbol,
             rewards24Usd: rewardRate24 * +dex_usd_price,
             remainingDaysForTokenString: convertToDaysAndHours(
-              remainingRewards / rewardRate24
+              remainingDaysForToken
             ),
-            remainingDaysForToken: remainingRewards / rewardRate24,
+            remainingDaysForToken,
           });
 
           return acc;
@@ -162,10 +165,16 @@ export default async function handler(
         token0: {
           image: tokens[tokenIndex].asset.image_url,
           symbol: tokens[tokenIndex].asset.symbol,
+          dex_usd_price: tokens[tokenIndex].asset.dex_usd_price,
+          contractAddress: tokens[tokenIndex].asset.contract_address, // адрес masterJetton, в дальнейшем по нему получим баланс юзера в этой монете
+          decimals: tokens[tokenIndex].asset.decimals,
         },
         token1: {
           image: tokens[tokenIndex + 1].asset.image_url,
           symbol: tokens[tokenIndex + 1].asset.symbol,
+          dex_usd_price: tokens[tokenIndex + 1].asset.dex_usd_price,
+          contractAddress: tokens[tokenIndex + 1].asset.contract_address, // адрес masterJetton, в дальнейшем по нему получим баланс юзера в этой монете
+          decimals: tokens[tokenIndex + 1].asset.decimals,
         },
       });
       tokenIndex += 2;
@@ -182,6 +191,8 @@ export default async function handler(
       ) {
         swapTokensData.USDT.dex_usd_price = tokensMap[key].dex_usd_price;
         swapTokensData.USDT.image_url = tokensMap[key].image_url;
+        swapTokensData.USDT.decimals = tokensMap[key].decimals;
+        swapTokensData.USDT.contractAddress = tokensMap[key].contract_address;
       }
 
       if (

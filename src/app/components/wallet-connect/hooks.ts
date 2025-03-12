@@ -1,4 +1,7 @@
+import { usdtMasterJetton } from "@/app/shared/constants/coins";
 import { TWallet } from "@/app/shared/types/ton";
+import { getJettonBalance } from "@/app/shared/utils";
+import { useStonFiStore } from "@/store/ston-fi-store";
 import { useTonWebStore } from "@/store/ton-web-store";
 import { useWalletsStore } from "@/store/wallets-store";
 import TonConnect, { WalletInfo } from "@tonconnect/sdk";
@@ -9,6 +12,7 @@ export const useWalletConnect = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const [connectionLink, setConnectionLink] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { swapTokensData } = useStonFiStore();
 
   const {
     wallet,
@@ -82,50 +86,14 @@ export const useWalletConnect = () => {
         const addressInfo = await tonweb.provider.getAddressInfo(address);
         const ton = +TonWeb.utils.fromNano(addressInfo.balance);
 
-        // пока хардкодим
-        const usdtMasterJetton =
-          "EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs";
+        const usdt = await getJettonBalance({
+          userAddress: address,
+          masterJettonAddress: usdtMasterJetton,
+          tonWebClient: tonweb,
+          decimals: 6,
+        });
 
-        const rawData = await tonweb.provider.call2(
-          usdtMasterJetton,
-          "get_jetton_data",
-          []
-        );
-
-        // Расшифровываем данные
-        const [_totalSupply, _decimals, contentCell, walletCodeCell] = rawData;
-        const adminAddress = rawData[4]; // Адрес администратора из master data
-        const jettonContentUri = contentCell.bits.toString(); // URI контента
-        const jettonWalletCodeHex = walletCodeCell.toString("hex"); // Байткод кошелька
-
-        const jettonMinter = new TonWeb.token.jetton.JettonMinter(
-          tonweb.provider,
-          {
-            address: usdtMasterJetton,
-            adminAddress: adminAddress,
-            jettonContentUri: jettonContentUri,
-            jettonWalletCodeHex: jettonWalletCodeHex,
-          }
-        );
-
-        const jettonWalletAddress = await jettonMinter.getJettonWalletAddress(
-          new TonWeb.utils.Address(address)
-        );
-
-        const jettonWallet = new TonWeb.token.jetton.JettonWallet(
-          tonweb.provider,
-          {
-            address: jettonWalletAddress,
-          }
-        );
-
-        const data = await jettonWallet.getData();
-        const balanceMinimal = data.balance.toString();
-
-        // Преобразуем в стандартный формат
-        const balanceStandard = parseFloat(balanceMinimal) / Math.pow(10, 6);
-
-        saveBalance({ ton, usdt: balanceStandard });
+        saveBalance({ ton, usdt });
       } else {
         saveWallet(null);
       }
@@ -134,7 +102,13 @@ export const useWalletConnect = () => {
     return () => {
       unsubscribe();
     };
-  }, [saveBalance, saveWallet, saveTonConnect, saveTonWebClient]);
+  }, [
+    swapTokensData,
+    saveBalance,
+    saveWallet,
+    saveTonConnect,
+    saveTonWebClient,
+  ]);
 
   return {
     wallet,

@@ -1,5 +1,4 @@
 import { Box, BoxProps } from "@mui/material";
-import { TCoins } from "@/utils/types";
 
 type TProps = BoxProps & {
   icon: string;

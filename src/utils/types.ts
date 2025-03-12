@@ -103,6 +103,14 @@ export type TRewardsPerCoin = {
   rewards24Usd: number;
 };
 
+type TToken = {
+  image: string;
+  symbol: string;
+  dex_usd_price: string;
+  contractAddress: string;
+  decimals: number;
+};
+
 export type TFrontPool = {
   tvl: number;
   apr: number;
@@ -115,19 +123,18 @@ export type TFrontPool = {
   remainingDaysForTokenString: string;
   remainingDaysForToken: number;
   rewardsPerCoin: TRewardsPerCoin[];
-  token0: {
-    image: string;
-    symbol: string;
-  };
-  token1: {
-    image: string;
-    symbol: string;
-  };
+  token0: TToken;
+  token1: TToken;
 };
 
 export type TSwapTokensData = Record<
   TCoins,
-  { image_url?: string; dex_usd_price?: string }
+  {
+    image_url?: string;
+    dex_usd_price?: string;
+    decimals?: number;
+    contractAddress?: string;
+  }
 >;
 
 export type TFrontPoolsRes = {
